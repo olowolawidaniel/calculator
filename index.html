@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .calculator {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        button {
+            background-color: gray;
+            font-size: 20px;
+            padding: 10px;
+            border: none;
+        }
+
+        button:hover {
+            background-color: rgb(151, 124, 124);
+        }
+
+        .display {
+            text-align: center; 
+            background-color: gray;
+            padding: 15px;
+            margin-bottom: 10px;
+        }
+
+        .zero {
+            grid-column: span 2;
+        }
+
+        @media screen and (max-width: 700px) {
+            .calculator {
+            padding: 0px 20px;}
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator">
+        <div class="display" id="display">
+            0
+        </div>
+        <div class="buttons">
+            <button>AC</button>
+            <button>&plusmn;</button>
+            <button>%</button>
+            <button>/</button>
+
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button>*</button>
+
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>-</button>
+
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>+</button>
+
+            <button class="zero">0</button>
+            <button>.</button>
+            <button>=</button>
+        </div>
+    </div>
+    <script>
+        const display = document.getElementById("display");
+        const buttons = document.querySelectorAll(".buttons button");
+
+            let currentNumber = "";
+            let firstNumber = "";
+            let operator = "";
+            let shouldResetDisplay = false;
+
+            buttons.forEach(button => {
+                button.addEventListener("click", ()  => {
+                    const value = button.textContent.trim();
+                        // button.textContent.trim();
+                        //     console.log("you clicked:", value);
+                        //      display.textContent = value;
+                        // // Number and Decimal point
+                        if (!isNaN(value) || value === ".") {
+                                if (shouldResetDisplay) {
+                                    currentNumber = "";
+                                    shouldResetDisplay = false;
+                                }
+
+                        if (value === "." && currentNumber.includes(".")) {
+                            return;}
+                            currentNumber += value;
+                            display.textContent = currentNumber;
+                        } 
+
+                    
+                    
+                        //clear
+                        else if (value === "AC") {
+                            currentNumber = "";
+                            firstNumber = "";
+                            operator = "";
+                            display.textContent = "0";
+                        }
+                    
+                        //operators
+                        else if(
+                        value === "+" || 
+                        value === "-" || 
+                        value === "*" ||
+                        value === "/") {
+                            firstNumber = currentNumber;
+                            operator = value;
+                            shouldResetDisplay = true;
+                            display.textContent = value;
+                        }
+
+                        //Equals
+                        else if(value === "=") {
+                            const secondNumber = currentNumber;
+                            let result;
+                            if (operator === "+") {
+                                result =
+                                Number(firstNumber) + Number(secondNumber);
+                            }
+
+                            else if(operator === "-") {
+                                result =
+                                Number(firstNumber) - Number(secondNumber);
+                            }
+
+                            else if(operator === "*") {
+                                result = 
+                                Number(firstNumber) * Number(secondNumber);
+                            }
+
+                            else if(operator === "/") {
+                                result = 
+                                Number(firstNumber) / Number(secondNumber);
+                            }
+                                display.textContent = result;
+                                        currentNumber = String(result);
+                                        
+                                        shouldResetDisplay = true;
+                            }
+                     });   
+            });
+    </script>
+</body>
+</html>
